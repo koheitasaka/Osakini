@@ -1,8 +1,8 @@
-import firebase from 'firebase/app'
-import 'firebase/auth' // If you need it
-import 'firebase/firestore' // If you need it
-import 'firebase/storage' // If you need it
-import 'firebase/analytics' // If you need it
+import * as firebase from 'firebase/app';
+import 'firebase/auth';
+import 'firebase/firestore';
+import 'firebase/functions';
+import 'firebase/storage';
 
 const clientCredentials = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
@@ -14,11 +14,19 @@ const clientCredentials = {
   appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
 }
 
-// Check that `window` is in scope for the analytics module!
-if (typeof window !== 'undefined' && !firebase.apps.length) {
-  firebase.initializeApp(clientCredentials)
-  // To enable analytics. https://firebase.google.com/docs/analytics/get-started
-  if ('measurementId' in clientCredentials) firebase.analytics()
+try {
+  firebase.initializeApp(clientCredentials);
+} catch (err) {
+  // we skip the "already exists" message which is
+  // not an actual error when we're hot-reloading
+  if (!/already exists/.test(err.message)) {
+    console.error('Firebase initialization error', err.stack);
+  }
 }
+
+export const auth = firebase.auth();
+export const db = firebase.firestore();
+export const functions = firebase.functions();
+export const storage = firebase.storage();
 
 export default firebase
