@@ -12,7 +12,7 @@ const clientCredentials = {
   storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
   messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
   appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
-}
+};
 
 try {
   firebase.initializeApp(clientCredentials);
@@ -29,4 +29,4 @@ export const db = firebase.firestore();
 export const functions = firebase.functions();
 export const storage = firebase.storage();
 
-export default firebase
+export default firebase;

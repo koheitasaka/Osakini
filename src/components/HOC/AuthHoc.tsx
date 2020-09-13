@@ -1,13 +1,13 @@
-import React from "react";
+import React from 'react';
+import { useRouter } from 'next/router';
+import firebase from 'firebase';
 import { auth } from '../../config/';
-import { useRouter } from 'next/router'
-import Layout from "../Layout";
-import firebase from "firebase";
+import Layout from '../Layout';
 
-const AuthHoc = (props: { children: React.ReactNode; }) => {
+const AuthHoc = (props: { children: React.ReactNode }) => {
   const [isFetching, setIsFetching] = React.useState(false);
   const [isSignedIn, setIsSignedIn] = React.useState(false);
-  
+
   const router = useRouter();
 
   const checkAuth = async () => {
@@ -21,7 +21,7 @@ const AuthHoc = (props: { children: React.ReactNode; }) => {
         // router.push('/');
       }
     });
-  }
+  };
 
   React.useEffect(() => {
     checkAuth();
@@ -34,17 +34,17 @@ const AuthHoc = (props: { children: React.ReactNode; }) => {
   ) : !isSignedIn ? (
     <Layout>
       <div>
-      <button
-       onClick={() => {
-        const provider = new firebase.auth.GoogleAuthProvider();
-        firebase.auth().signInWithRedirect(provider);
-      }}
-    >
-      Login
-    </button>
+        <button
+          onClick={() => {
+            const provider = new firebase.auth.GoogleAuthProvider();
+            firebase.auth().signInWithRedirect(provider);
+          }}
+        >
+          Login
+        </button>
       </div>
     </Layout>
-    ) : (
+  ) : (
     <React.Fragment>{props.children}</React.Fragment>
   );
 };
