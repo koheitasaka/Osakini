@@ -3,8 +3,11 @@ import { useRouter } from 'next/router';
 import firebase from 'firebase';
 import { auth } from '../../config/';
 import Layout from '../Layout';
+import Form from '../Form';
+import UserPage from '../UserPage';
 
-const AuthHoc = (props: { children: React.ReactNode }) => {
+const AuthHoc = (props: { children: React.ReactChildren }) => {
+  const [isACtive, setIsActive] = React.useState(false);
   const [isFetching, setIsFetching] = React.useState(false);
   const [isSignedIn, setIsSignedIn] = React.useState(false);
 
@@ -18,9 +21,12 @@ const AuthHoc = (props: { children: React.ReactNode }) => {
         setIsFetching(false);
       } else {
         setIsFetching(false);
-        // router.push('/');
       }
     });
+  };
+
+  const activateUser = () => {
+    setIsActive(true);
   };
 
   React.useEffect(() => {
@@ -29,7 +35,8 @@ const AuthHoc = (props: { children: React.ReactNode }) => {
 
   return isFetching ? (
     <div>
-      <h1>Sign in....</h1>
+      <h1>Please wait</h1>
+      <h1>Loading now.....</h1>
     </div>
   ) : !isSignedIn ? (
     <Layout>
