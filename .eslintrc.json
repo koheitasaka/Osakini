@@ -1,0 +1,59 @@
+{
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:@typescript-eslint/eslint-recommended",
+    "plugin:prettier/recommended",
+    "prettier/@typescript-eslint",
+    "plugin:import/errors",
+    "plugin:import/warnings",
+    "plugin:import/typescript"
+  ],
+  "plugins": [
+    "prettier",
+    "@typescript-eslint",
+    "react"
+  ],
+  "parser": "@typescript-eslint/parser",
+  "env": { "browser": true, "node": true, "es6": true },
+  "parserOptions": {
+    "sourceType": "module"
+  },
+  "rules": {
+    "import/no-unresolved": "off",
+    "eqeqeq":"warn",
+    "quotes": ["warn", "single"],
+    "semi": ["warn", "always"],
+    "import/order": [
+      "warn", 
+      {
+        "groups": ["builtin", "external", "internal", "parent", "sibling", "index"]
+      }
+    ],
+    "sort-imports": [
+      "warn",
+      {
+        "ignoreDeclarationSort": true,
+        "ignoreMemberSort": false,
+        "memberSyntaxSortOrder": ["none", "all", "single", "multiple"]
+      }
+    ],
+    "@typescript-eslint/explicit-function-return-type": "off",
+    "@typescript-eslint/interface-name-prefix": [
+      "warn",
+      {
+        "prefixWithI": "always"
+      }
+    ],
+    "prettier/prettier": [
+      "warn",
+      {
+        "singleQuote": true,
+        "semi": true,
+        "trailingComma": "all"
+      }
+    ],
+    "react/jsx-uses-react": "error",   
+    "react/jsx-uses-vars": "error"
+  }
+}
