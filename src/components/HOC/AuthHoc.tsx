@@ -5,7 +5,7 @@ import styled from '@emotion/styled';
 import { jsx } from '@emotion/core';
 import { CircularProgress } from '@material-ui/core';
 import { auth, functions } from '../../config/';
-import Layout from '../Layout';
+import Layout from '../Layout/Layout';
 
 type Props = {
   children?: React.ReactNode;

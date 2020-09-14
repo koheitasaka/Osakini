@@ -1,6 +1,6 @@
 import React from 'react';
-import Layout from '../components/Layout';
-import UserPage from '../components/UserPage';
+import Layout from '../components/Layout/Layout';
+import UserPage from '../components/User/UserPage';
 import { auth, functions } from '../config';
 
 const IndexPage = () => {

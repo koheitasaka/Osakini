@@ -4,7 +4,7 @@ import Link from 'next/link';
 import Head from 'next/head';
 import { jsx } from '@emotion/core';
 import styled from '@emotion/styled';
-import { auth, functions } from '../config';
+import { auth, functions } from '../../config';
 
 type Props = {
   children?: ReactNode;
