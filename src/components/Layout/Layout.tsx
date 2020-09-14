@@ -56,6 +56,9 @@ const Layout = ({ children }: Props) => {
             <Link href="/">
               <p>Home</p>
             </Link>
+            <Link href="/tasks">
+              <p>Tasks</p>
+            </Link>
             <p onClick={() => handleLogout()}>Logout</p>
           </SideContainer>
         </Side>

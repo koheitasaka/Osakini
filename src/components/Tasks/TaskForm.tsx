@@ -5,20 +5,17 @@ import * as Yup from 'yup';
 import { Button, FormLabel, TextField } from '@material-ui/core';
 import { jsx } from '@emotion/core';
 import styled from '@emotion/styled';
-import { auth, functions } from '../../config';
+import { functions } from '../../config';
 import { IUser } from '../../../functions/src/types';
 
 interface IValues {
   name: string;
-  position: string;
-  team: string;
-  id: string;
+  discription: string;
+  isCompleted: boolean;
 }
 
 interface IProps {
   handleClose: () => void;
-  updateUser: () => void;
-  values: IUser;
 }
 
 const Form = styled.form({
@@ -35,37 +32,31 @@ const ButtonContainer = styled.div({
   padding: '8px 0',
 });
 
-const UserEditForm: React.FC<IProps> = ({
-  handleClose,
-  updateUser,
-  values,
-}) => {
+const TaskForm: React.FC<IProps> = ({ handleClose }) => {
   const validation = () => {
     Yup.object().shape({
       name: Yup.string().required('必須項目です'),
-      position: Yup.string().required('必須項目です'),
-      team: Yup.string().required('必須項目です'),
+      discription: Yup.string().required('必須項目です'),
     });
   };
 
-  const setUserValue = () => {
-    updateUser();
-  };
+  // const setUserValue = () => {
+  //   updateUser();
+  // };
 
   const onSubmit = async (values: IValues) => {
-    const updateUser = functions.httpsCallable('updateUser');
-    await updateUser(values);
-    setUserValue();
+    // const insertTask = functions.httpsCallable('insertTask');
+    // await insertTask(values);
+    console.log(values);
     handleClose();
   };
 
   return (
     <Formik
       initialValues={{
-        name: values.name,
-        position: values.position,
-        team: values.team,
-        id: auth.currentUser?.uid as string,
+        name: '',
+        discription: '',
+        isCompleted: false,
       }}
       validationSchema={validation()}
       onSubmit={(values: IValues) => onSubmit(values)}
@@ -82,24 +73,14 @@ const UserEditForm: React.FC<IProps> = ({
             <span>{errors.name}</span>
           </FormContainer>
           <FormContainer>
-            <FormLabel>Position</FormLabel>
+            <FormLabel>Discription</FormLabel>
             <TextField
-              name="position"
+              name="discription"
               type="text"
               fullWidth
               onChange={handleChange}
             />
-            <span>{errors.position}</span>
-          </FormContainer>
-          <FormContainer>
-            <FormLabel>Team</FormLabel>
-            <TextField
-              name="team"
-              type="text"
-              fullWidth
-              onChange={handleChange}
-            />
-            <span>{errors.team}</span>
+            <span>{errors.discription}</span>
           </FormContainer>
           <ButtonContainer>
             <Button type="submit" color="primary" variant="outlined">
@@ -112,4 +93,4 @@ const UserEditForm: React.FC<IProps> = ({
   );
 };
 
-export default UserEditForm;
+export default TaskForm;

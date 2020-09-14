@@ -37,7 +37,6 @@ const AuthHoc = ({ children }: Props) => {
   const checkAuth = async () => {
     setIsFetching(true);
     const redirectResult = await auth.getRedirectResult();
-    console.log(redirectResult);
     if (redirectResult.user) {
       if (redirectResult.additionalUserInfo?.isNewUser) {
         const createUser = functions.httpsCallable('insertUser');
