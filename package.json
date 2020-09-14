@@ -2,9 +2,9 @@
   "name": "with-typescript",
   "version": "1.0.0",
   "scripts": {
-    "dev": "node server.js",
+    "dev": "next",
     "build": "next build",
-    "start": "NODE_ENV=production node server.js",
+    "start": "next start",
     "type-check": "tsc"
   },
   "dependencies": {
@@ -13,26 +13,27 @@
     "@material-ui/core": "^4.9.0",
     "@material-ui/icons": "^4.5.1",
     "@material-ui/lab": "^4.0.0-alpha.44",
-    "@types/lodash": "^4.14.158",
     "@material-ui/pickers": "^3.2.10",
+    "@types/lodash": "^4.14.158",
     "@types/react-stripe-elements": "^6.0.4",
     "@types/uuid": "^8.0.0",
+    "@types/yup": "^0.29.7",
     "babel-plugin-emotion": "^10.0.27",
     "firebase": "^7.7.0",
+    "formik": "^2.1.5",
     "isomorphic-unfetch": "^3.0.0",
-    "lodash": "^4.17.19",
     "next": "latest",
     "nextjs-redirect": "^4.0.2",
+    "nookies": "^2.4.0",
     "prop-types": "^15.7.2",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
-    "uuid": "^8.2.0"
+    "yup": "^0.29.3"
   },
   "devDependencies": {
     "@types/node": "^12.12.21",
     "@types/react": "^16.9.16",
     "@types/react-dom": "^16.9.4",
-    "typescript": "3.7.3",
     "@typescript-eslint/eslint-plugin": "^2.16.0",
     "@typescript-eslint/parser": "^2.17.0",
     "eslint": "^6.8.0",
@@ -41,7 +42,8 @@
     "eslint-plugin-prettier": "^3.1.2",
     "eslint-plugin-react": "^7.18.0",
     "firebase-tools": "^7.15.1",
-    "prettier": "^1.19.1"
+    "prettier": "^1.19.1",
+    "typescript": "3.7.3"
   },
   "license": "ISC"
 }
