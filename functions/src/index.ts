@@ -1,6 +1,6 @@
 import * as functions from 'firebase-functions';
 import { app } from './admin';
-import { IUserInput } from './types';
+import { IUser } from './types';
 
 // // // Start writing Firebase Functions
 // // // https://firebase.google.com/docs/functions/typescript
@@ -10,14 +10,14 @@ const userExists = (context: functions.https.CallableContext) => {
   return Boolean(context.auth && context.auth.uid);
 };
 
-export const createUser = functions.https.onCall(
-  async (data: IUserInput, context: functions.https.CallableContext) => {
+export const insertUser = functions.https.onCall(
+  async (data: IUser, context: functions.https.CallableContext) => {
     if (!userExists(context)) throw new Error('no user');
     try {
       const userRef = app
         .firestore()
-        .collection('user')
-        .doc(data.id);
+        .collection('users')
+        .doc(data.name);
       await userRef.set({
         name: data.name,
         position: data.position,

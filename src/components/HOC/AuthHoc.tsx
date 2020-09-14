@@ -1,32 +1,35 @@
 import React from 'react';
-import { useRouter } from 'next/router';
 import firebase from 'firebase';
-import { auth } from '../../config/';
+import { auth, functions } from '../../config/';
 import Layout from '../Layout';
-import Form from '../Form';
-import UserPage from '../UserPage';
 
 const AuthHoc = (props: { children: React.ReactChildren }) => {
-  const [isACtive, setIsActive] = React.useState(false);
   const [isFetching, setIsFetching] = React.useState(false);
   const [isSignedIn, setIsSignedIn] = React.useState(false);
 
-  const router = useRouter();
-
   const checkAuth = async () => {
-    setIsFetching(true);
-    auth.onAuthStateChanged(authUser => {
-      if (authUser) {
-        setIsSignedIn(true);
-        setIsFetching(false);
-      } else {
-        setIsFetching(false);
+    const redirectResult = await auth.getRedirectResult();
+    console.log(redirectResult);
+    if (redirectResult.user) {
+      if (redirectResult.additionalUserInfo?.isNewUser) {
+        const createUser = functions.httpsCallable('insertUser');
+        await createUser({
+          name: auth.currentUser?.uid as string,
+          position: 'Undefined',
+          team: 'Undefined',
+        });
       }
-    });
-  };
-
-  const activateUser = () => {
-    setIsActive(true);
+      auth.onAuthStateChanged(authUser => {
+        if (authUser) {
+          setIsSignedIn(true);
+          setIsFetching(false);
+        } else {
+          setIsFetching(false);
+        }
+      });
+    } else {
+      setIsSignedIn(false);
+    }
   };
 
   React.useEffect(() => {
@@ -42,9 +45,9 @@ const AuthHoc = (props: { children: React.ReactChildren }) => {
     <Layout>
       <div>
         <button
-          onClick={() => {
+          onClick={async () => {
             const provider = new firebase.auth.GoogleAuthProvider();
-            firebase.auth().signInWithRedirect(provider);
+            auth.signInWithRedirect(provider);
           }}
         >
           Login
