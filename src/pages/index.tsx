@@ -7,6 +7,7 @@ const IndexPage = () => {
   const [name, setName] = React.useState('');
   const [position, setPositon] = React.useState('');
   const [team, setTeam] = React.useState('');
+  const [isUpdating, setIsUpdating] = React.useState(false);
 
   const fetchUser = async () => {
     const fetchUser = functions.httpsCallable('fetchUser');
@@ -14,11 +15,20 @@ const IndexPage = () => {
     return result.data;
   };
 
+  const updateUser = async () => {
+    setIsUpdating(true);
+    const result = await fetchUser();
+    setName(result.name);
+    setPositon(result.position);
+    setTeam(result.team);
+    setIsUpdating(false);
+  };
+
   React.useEffect(() => {
     let unmounted = false;
 
     (async () => {
-      const result = await fetchUser(); //架空の関数
+      const result = await fetchUser();
 
       if (!unmounted) {
         setName(result.name);
@@ -34,7 +44,13 @@ const IndexPage = () => {
 
   return (
     <Layout>
-      <UserPage userName={name} position={position} team={team} />
+      <UserPage
+        userName={name}
+        position={position}
+        team={team}
+        updateUser={updateUser}
+        isUpdating={isUpdating}
+      />
     </Layout>
   );
 };

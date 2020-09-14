@@ -1,6 +1,6 @@
 import * as functions from 'firebase-functions';
 import { app } from './admin';
-import { IUser } from './types';
+import { IUser, IUserInput } from './types';
 
 // // // Start writing Firebase Functions
 // // // https://firebase.google.com/docs/functions/typescript
@@ -18,6 +18,26 @@ export const insertUser = functions.https.onCall(
         .firestore()
         .collection('users')
         .doc(data.name);
+      await userRef.set({
+        name: data.name,
+        position: data.position,
+        team: data.team,
+      });
+      return 'success';
+    } catch (error) {
+      return error.message;
+    }
+  },
+);
+
+export const updateUser = functions.https.onCall(
+  async (data: IUserInput, context: functions.https.CallableContext) => {
+    if (!userExists(context)) throw new Error('no user');
+    try {
+      const userRef = app
+        .firestore()
+        .collection('users')
+        .doc(data.id);
       await userRef.set({
         name: data.name,
         position: data.position,

@@ -1,13 +1,41 @@
+/**@jsx jsx */
 import React from 'react';
 import firebase from 'firebase';
+import styled from '@emotion/styled';
+import { jsx } from '@emotion/core';
+import { CircularProgress } from '@material-ui/core';
 import { auth, functions } from '../../config/';
 import Layout from '../Layout';
 
-const AuthHoc = (props: { children: React.ReactChildren }) => {
+type Props = {
+  children?: React.ReactNode;
+};
+
+const ProgressContainer = styled.div({
+  marginTop: '32px',
+  textAlign: 'center',
+});
+
+const ImageContainer = styled.div({
+  textAlign: 'center',
+  marginTop: '320px',
+});
+
+const SignInBtn = styled.img({
+  maxWidth: '250px',
+  cursor: 'pointer',
+  margin: '20px',
+  ':hover': {
+    opacity: '0.8',
+  },
+});
+
+const AuthHoc = ({ children }: Props) => {
   const [isFetching, setIsFetching] = React.useState(false);
   const [isSignedIn, setIsSignedIn] = React.useState(false);
 
   const checkAuth = async () => {
+    setIsFetching(true);
     const redirectResult = await auth.getRedirectResult();
     console.log(redirectResult);
     if (redirectResult.user) {
@@ -24,10 +52,11 @@ const AuthHoc = (props: { children: React.ReactChildren }) => {
           setIsSignedIn(true);
           setIsFetching(false);
         } else {
-          setIsFetching(false);
+          setIsSignedIn(false);
         }
       });
     } else {
+      setIsFetching(false);
       setIsSignedIn(false);
     }
   };
@@ -37,25 +66,26 @@ const AuthHoc = (props: { children: React.ReactChildren }) => {
   }, []);
 
   return isFetching ? (
-    <div>
-      <h1>Please wait</h1>
-      <h1>Loading now.....</h1>
-    </div>
+    <Layout>
+      <ProgressContainer>
+        <CircularProgress />
+      </ProgressContainer>
+    </Layout>
   ) : !isSignedIn ? (
     <Layout>
-      <div>
-        <button
-          onClick={async () => {
+      <ImageContainer>
+        <SignInBtn
+          src="/google_sign_in.png"
+          alt="サインイン"
+          onClick={() => {
             const provider = new firebase.auth.GoogleAuthProvider();
-            auth.signInWithRedirect(provider);
+            firebase.auth().signInWithRedirect(provider);
           }}
-        >
-          Login
-        </button>
-      </div>
+        />
+      </ImageContainer>
     </Layout>
   ) : (
-    <React.Fragment>{props.children}</React.Fragment>
+    <React.Fragment>{children}</React.Fragment>
   );
 };
 

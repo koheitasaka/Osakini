@@ -1,35 +1,66 @@
+/** @jsx jsx */
 import React from 'react';
-import Link from 'next/link';
-import { auth, functions } from '../config';
-import Layout from './Layout';
+import { jsx } from '@emotion/core';
+import styled from '@emotion/styled';
+import { CircularProgress } from '@material-ui/core';
+import { IUser } from '../../functions/src/types';
+import UserEditModal from './User/UserEditModal';
 
 interface IProps {
   userName?: string;
   position: string;
   team: string;
+  updateUser: () => void;
+  isUpdating: boolean;
 }
 
-const UserPage: React.FC<IProps> = ({ userName, position, team }) => {
-  const handleLogout = async () => {
-    try {
-      const fetchUser = functions.httpsCallable('fetchUser');
-      const result = await fetchUser(auth.currentUser?.uid as string);
-      console.log(result);
-    } catch (error) {
-      console.log(error.message);
-    }
-    await auth.signOut();
+const ProgressContainer = styled.div({
+  marginTop: '32px',
+  textAlign: 'center',
+});
+
+const UserContainer = styled.div({
+  margin: '200px',
+});
+
+const UserName = styled.h2({
+  marginTop: '32px',
+  textAlign: 'center',
+});
+
+const UserInfo = styled.h4({
+  textAlign: 'center',
+  color: '#6B6B6B',
+});
+
+const UserPage: React.FC<IProps> = ({
+  userName,
+  position,
+  team,
+  updateUser,
+  isUpdating,
+}) => {
+  const userValue: IUser = {
+    name: userName as string,
+    position,
+    team,
   };
 
   return (
-    <div>
-      <h1>Hello {userName} 👋</h1>
-      <p>position: {position}</p>
-      <p>team: {team}</p>
-      <p>
-        <button onClick={() => handleLogout()}>Logout</button>
-      </p>
-    </div>
+    <UserContainer>
+      {isUpdating ? (
+        <ProgressContainer>
+          <CircularProgress />
+        </ProgressContainer>
+      ) : (
+        <UserContainer>
+          <UserName>{userName} 👋</UserName>
+          <UserInfo>position: {position}</UserInfo>
+          <UserInfo>team: {team}</UserInfo>
+          <UserEditModal updateUser={updateUser} values={userValue} />
+        </UserContainer>
+      )}
+    </UserContainer>
   );
 };
 
