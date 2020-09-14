@@ -5,6 +5,7 @@ import styled from '@emotion/styled';
 import {
   Button,
   Checkbox,
+  CircularProgress,
   IconButton,
   List,
   ListItem,
@@ -16,6 +17,7 @@ import CommentIcon from '@material-ui/icons/Comment';
 import Layout from '../components/Layout/Layout';
 import { auth, functions } from '../config';
 import TaskModal from '../components/Tasks/TaskModal';
+import { ITaskData } from '../../functions/src/types';
 
 const Container = styled.div();
 
@@ -23,13 +25,21 @@ const TopContainer = styled.div();
 
 const PageTitle = styled.h2();
 
+const ProgressContainer = styled.div({
+  marginTop: '32px',
+  textAlign: 'center',
+});
+
 const TasksContainer = styled.div();
 
 const Tasks = () => {
-  const [tasks, setTasks] = React.useState([]);
+  const [tasks, setTasks] = React.useState([] as ITaskData[]);
   const [checked, setChecked] = React.useState([0]);
+  const [isCreating, setIsCreating] = React.useState(false);
+  const [isFetching, setIsFetching] = React.useState(false);
 
   const fetchTasks = async () => {
+    setIsFetching(true);
     const fetchTasks = functions.httpsCallable('fetchTasks');
     const result = await fetchTasks();
     return result.data;
@@ -48,64 +58,80 @@ const Tasks = () => {
     setChecked(newChecked);
   };
 
-  // React.useEffect(() => {
-  // let unmounted = false;
+  const changeSubmiting = () => {
+    setIsCreating(true);
+  };
 
-  // (async () => {
-  //   const result = await fetchTasks();
+  const successSubmit = async () => {
+    const result = await fetchTasks();
+    setTasks(result);
+    setIsCreating(false);
+    setIsFetching(false);
+  };
 
-  //   if (!unmounted) {
-  //     setTasks(result);
-  //   }
-  // })();
+  React.useEffect(() => {
+    let unmounted = false;
 
-  // return () => {
-  //   unmounted = true;
-  // };
-  // });
+    (async () => {
+      const result = await fetchTasks();
+
+      if (!unmounted) {
+        setTasks(result);
+        console.log(result);
+        setIsFetching(false);
+      }
+    })();
+
+    return () => {
+      unmounted = true;
+    };
+  }, []);
 
   return (
     <Layout>
       <Container>
         <TopContainer>
           <PageTitle>Tasks</PageTitle>
-          <TaskModal />
+          <TaskModal
+            changeSubmiting={changeSubmiting}
+            successSubmit={successSubmit}
+          />
         </TopContainer>
-        <TasksContainer>
-          <List>
-            {[0, 1, 2, 3].map(value => {
-              const labelId = `checkbox-list-label-${value}`;
-              return (
-                <ListItem
-                  key={value}
-                  role={undefined}
-                  dense
-                  button
-                  onClick={handleToggle(value)}
-                >
-                  <ListItemIcon>
-                    <Checkbox
-                      edge="start"
-                      checked={checked.indexOf(value) !== -1}
-                      tabIndex={-1}
-                      disableRipple
-                      inputProps={{ 'aria-labelledby': labelId }}
-                    />
-                  </ListItemIcon>
-                  <ListItemText
-                    id={labelId}
-                    primary={`Line item ${value + 1}`}
-                  />
-                  <ListItemSecondaryAction>
-                    <IconButton edge="end" aria-label="comments">
-                      <CommentIcon />
-                    </IconButton>
-                  </ListItemSecondaryAction>
-                </ListItem>
-              );
-            })}
-          </List>
-        </TasksContainer>
+        {isCreating || isFetching ? (
+          <ProgressContainer>
+            <CircularProgress />
+          </ProgressContainer>
+        ) : (
+          <TasksContainer>
+            {/* {tasks.map(task => (
+              <p>{task.name}</p>
+            ))} */}
+            <List>
+              {tasks.map(task => {
+                const labelId = `checkbox-list-label-${task.name}`;
+                return (
+                  <ListItem key={task.id} role={undefined} dense button>
+                    <ListItemIcon>
+                      <Checkbox
+                        edge="start"
+                        checked={task.isCompleted}
+                        tabIndex={-1}
+                        disableRipple
+                        inputProps={{ 'aria-labelledby': labelId }}
+                      />
+                    </ListItemIcon>
+                    <ListItemText id={labelId} primary={task.name} />
+                    <ListItemSecondaryAction>
+                      <IconButton edge="end" aria-label="comments">
+                        <CommentIcon />
+                      </IconButton>
+                    </ListItemSecondaryAction>
+                  </ListItem>
+                );
+              })}
+            </List>
+          </TasksContainer>
+        )}
       </Container>
     </Layout>
   );

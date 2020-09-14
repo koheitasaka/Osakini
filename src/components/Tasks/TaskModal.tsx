@@ -15,7 +15,12 @@ const titleSize = css({
   width: '320px',
 });
 
-const TaskModal = () => {
+interface IProps {
+  changeSubmiting: () => void;
+  successSubmit: () => void;
+}
+
+const TaskModal: React.FC<IProps> = ({ changeSubmiting, successSubmit }) => {
   const [open, setOpen] = React.useState(false);
 
   const handleOpen = () => {
@@ -24,6 +29,7 @@ const TaskModal = () => {
 
   const handleClose = () => {
     setOpen(false);
+    successSubmit();
   };
 
   return (
@@ -41,7 +47,10 @@ const TaskModal = () => {
           タスク追加
         </DialogTitle>
         <DialogContent>
-          <TaskForm handleClose={handleClose} />
+          <TaskForm
+            handleClose={handleClose}
+            changeSubmiting={changeSubmiting}
+          />
         </DialogContent>
       </Dialog>
     </Container>

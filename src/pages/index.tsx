@@ -40,7 +40,7 @@ const IndexPage = () => {
     return () => {
       unmounted = true;
     };
-  });
+  }, []);
 
   return (
     <Layout>

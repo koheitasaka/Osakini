@@ -1,15 +1,13 @@
 import * as functions from 'firebase-functions';
 import { app } from './admin';
-import { IUser, IUserInput } from './types';
+import { ITask, IUser, IUserInput } from './types';
 
-// // // Start writing Firebase Functions
-// // // https://firebase.google.com/docs/functions/typescript
-// //
-
+// utils
 const userExists = (context: functions.https.CallableContext) => {
   return Boolean(context.auth && context.auth.uid);
 };
 
+// User
 export const insertUser = functions.https.onCall(
   async (data: IUser, context: functions.https.CallableContext) => {
     if (!userExists(context)) throw new Error('no user');
@@ -71,6 +69,45 @@ export const fetchUser = functions.https.onCall(
     } catch (error) {
       console.log('エラー');
       return error.message;
+    }
+  },
+);
+
+// Task
+export const insertTask = functions.https.onCall(
+  async (data: ITask, context: functions.https.CallableContext) => {
+    if (!userExists(context)) throw new Error('no user');
+    try {
+      await app
+        .firestore()
+        .collection('tasks')
+        .add(data);
+      return 'success';
+    } catch (error) {
+      console.log(error.message);
+      return 'error';
+    }
+  },
+);
+
+export const fetchTasks = functions.https.onCall(
+  async (data: any, context: functions.https.CallableContext) => {
+    if (!userExists(context)) throw new Error('no user');
+    try {
+      const tasksRef = await app
+        .firestore()
+        .collection('tasks')
+        .get();
+      const tasks = tasksRef.docs.map(doc => ({
+        id: doc.id,
+        name: doc.data().name,
+        discription: doc.data().discription,
+        isCompleted: doc.data().isCompleted,
+      }));
+      return tasks;
+    } catch (error) {
+      console.log(error.message);
+      return 'error';
     }
   },
 );

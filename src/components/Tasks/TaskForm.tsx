@@ -6,7 +6,6 @@ import { Button, FormLabel, TextField } from '@material-ui/core';
 import { jsx } from '@emotion/core';
 import styled from '@emotion/styled';
 import { functions } from '../../config';
-import { IUser } from '../../../functions/src/types';
 
 interface IValues {
   name: string;
@@ -16,6 +15,7 @@ interface IValues {
 
 interface IProps {
   handleClose: () => void;
+  changeSubmiting: () => void;
 }
 
 const Form = styled.form({
@@ -32,7 +32,7 @@ const ButtonContainer = styled.div({
   padding: '8px 0',
 });
 
-const TaskForm: React.FC<IProps> = ({ handleClose }) => {
+const TaskForm: React.FC<IProps> = ({ handleClose, changeSubmiting }) => {
   const validation = () => {
     Yup.object().shape({
       name: Yup.string().required('必須項目です'),
@@ -40,14 +40,10 @@ const TaskForm: React.FC<IProps> = ({ handleClose }) => {
     });
   };
 
-  // const setUserValue = () => {
-  //   updateUser();
-  // };
-
   const onSubmit = async (values: IValues) => {
-    // const insertTask = functions.httpsCallable('insertTask');
-    // await insertTask(values);
-    console.log(values);
+    changeSubmiting();
+    const insertTask = functions.httpsCallable('insertTask');
+    await insertTask(values);
     handleClose();
   };
 
