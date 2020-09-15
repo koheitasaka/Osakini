@@ -1,6 +1,6 @@
 import * as functions from 'firebase-functions';
 import { app } from './admin';
-import { ITask, IUser, IUserInput } from './types';
+import { ITask, ITaskData, IUser, IUserInput } from './types';
 
 // utils
 const userExists = (context: functions.https.CallableContext) => {
@@ -105,6 +105,45 @@ export const fetchTasks = functions.https.onCall(
         isCompleted: doc.data().isCompleted,
       }));
       return tasks;
+    } catch (error) {
+      console.log(error.message);
+      return 'error';
+    }
+  },
+);
+
+export const fetchTask = functions.https.onCall(
+  async (id: string, context: functions.https.CallableContext) => {
+    if (!userExists(context)) throw new Error('no user');
+    try {
+      const taskRef = app
+        .firestore()
+        .collection('tasks')
+        .doc(id)
+        .get();
+      const task = (await taskRef).data() as ITask;
+      return task;
+    } catch (error) {
+      console.log(error.message);
+      return 'error';
+    }
+  },
+);
+
+export const updateTask = functions.https.onCall(
+  async (data: ITaskData, context: functions.https.CallableContext) => {
+    if (!userExists(context)) throw new Error('no user');
+    try {
+      const tasksRef = app
+        .firestore()
+        .collection('tasks')
+        .doc(data.id);
+      await tasksRef.set({
+        name: data.name,
+        discription: data.discription,
+        isCompleted: data.isCompleted,
+      });
+      return 'success';
     } catch (error) {
       console.log(error.message);
       return 'error';

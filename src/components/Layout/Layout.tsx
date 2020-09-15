@@ -28,6 +28,7 @@ const SideContainer = styled.div({
 
 const Main = styled.div({
   marginTop: '40px',
+  textAlign: 'center',
   width: '100%',
 });
 
