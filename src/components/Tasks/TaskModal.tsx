@@ -18,6 +18,7 @@ const titleSize = css({
 interface IProps {
   changeSubmiting: () => void;
   successSubmit: () => void;
+  closeModal: () => void;
   isOpen: boolean;
   type: string;
   task?: ITaskData;
@@ -26,15 +27,14 @@ interface IProps {
 const TaskModal: React.FC<IProps> = ({
   changeSubmiting,
   successSubmit,
+  closeModal,
   isOpen,
   type,
   task,
 }) => {
   const handleClose = () => {
-    successSubmit();
+    closeModal();
   };
-  console.log('task', task);
-  console.log('type', type);
   return (
     <Container>
       <Dialog
@@ -51,6 +51,7 @@ const TaskModal: React.FC<IProps> = ({
             <TaskForm
               handleClose={handleClose}
               changeSubmiting={changeSubmiting}
+              handleSubmit={successSubmit}
             />
           )}
           {type === 'edit' && (
@@ -58,6 +59,7 @@ const TaskModal: React.FC<IProps> = ({
               values={task as ITaskData}
               handleClose={handleClose}
               changeSubmiting={changeSubmiting}
+              handleSubmit={successSubmit}
             />
           )}
         </DialogContent>

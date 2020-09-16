@@ -4,9 +4,10 @@ import Link from 'next/link';
 import Head from 'next/head';
 import { jsx } from '@emotion/core';
 import styled from '@emotion/styled';
-import { auth, functions } from '../../config';
+import { auth } from '../../config';
 
 type Props = {
+  title: string;
   children?: ReactNode;
 };
 
@@ -32,22 +33,15 @@ const Main = styled.div({
   width: '100%',
 });
 
-const Layout = ({ children }: Props) => {
+const Layout = ({ title, children }: Props) => {
   const handleLogout = async () => {
-    try {
-      const fetchUser = functions.httpsCallable('fetchUser');
-      const result = await fetchUser(auth.currentUser?.uid as string);
-      console.log(result);
-    } catch (error) {
-      console.log(error.message);
-    }
     await auth.signOut();
   };
 
   return (
     <React.Fragment>
       <Head>
-        <title>HOME | osakini</title>
+        <title>{title} | osakini</title>
         <meta charSet="utf-8" />
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>

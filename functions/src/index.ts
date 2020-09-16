@@ -150,3 +150,20 @@ export const updateTask = functions.https.onCall(
     }
   },
 );
+
+export const deleteTask = functions.https.onCall(
+  async (id: string, context: functions.https.CallableContext) => {
+    if (!userExists(context)) throw new Error('no user');
+    try {
+      await app
+        .firestore()
+        .collection('tasks')
+        .doc(id)
+        .delete();
+      return 'success';
+    } catch (error) {
+      console.log(error.message);
+      return 'error';
+    }
+  },
+);

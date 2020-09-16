@@ -65,13 +65,13 @@ const AuthHoc = ({ children }: Props) => {
   }, []);
 
   return isFetching ? (
-    <Layout>
+    <Layout title="Sign In">
       <ProgressContainer>
         <CircularProgress />
       </ProgressContainer>
     </Layout>
   ) : !isSignedIn ? (
-    <Layout>
+    <Layout title="Sign In">
       <ImageContainer>
         <SignInBtn
           src="/google_sign_in.png"

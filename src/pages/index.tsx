@@ -34,6 +34,7 @@ const IndexPage = () => {
         setName(result.name);
         setPositon(result.position);
         setTeam(result.team);
+        console.log(result);
       }
     })();
 
@@ -43,7 +44,7 @@ const IndexPage = () => {
   }, []);
 
   return (
-    <Layout>
+    <Layout title="HOME">
       <UserPage
         userName={name}
         position={position}

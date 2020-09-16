@@ -19,6 +19,7 @@ interface IProps {
   values: ITaskData;
   handleClose: () => void;
   changeSubmiting: () => void;
+  handleSubmit: () => void;
 }
 
 const Form = styled.form({
@@ -39,6 +40,7 @@ const TaskEditForm: React.FC<IProps> = ({
   values,
   handleClose,
   changeSubmiting,
+  handleSubmit,
 }) => {
   const validation = () => {
     Yup.object().shape({
@@ -51,8 +53,9 @@ const TaskEditForm: React.FC<IProps> = ({
     const updateTask = functions.httpsCallable('updateTask');
     await updateTask(values);
     handleClose();
+    handleSubmit();
   };
-  console.log(values);
+
   return (
     <Formik
       initialValues={values}

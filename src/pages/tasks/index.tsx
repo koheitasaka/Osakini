@@ -74,6 +74,10 @@ const Tasks = () => {
     toggleOpen(true);
   };
 
+  const closeModal = () => {
+    toggleOpen(false);
+  };
+
   React.useEffect(() => {
     let unmounted = false;
 
@@ -82,7 +86,6 @@ const Tasks = () => {
 
       if (!unmounted) {
         setTasks(result);
-        console.log(result);
         setIsFetching(false);
       }
     })();
@@ -93,7 +96,7 @@ const Tasks = () => {
   }, []);
 
   return (
-    <Layout>
+    <Layout title="Task">
       <Container>
         <TopContainer>
           <PageTitle>Tasks</PageTitle>
@@ -103,6 +106,7 @@ const Tasks = () => {
           <TaskModal
             changeSubmiting={changeSubmiting}
             successSubmit={successSubmit}
+            closeModal={closeModal}
             isOpen={isOpen}
             type={'new'}
           />

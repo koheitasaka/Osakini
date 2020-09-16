@@ -2,18 +2,9 @@
 import React from 'react';
 import { jsx } from '@emotion/core';
 import styled from '@emotion/styled';
-import {
-  Button,
-  Checkbox,
-  CircularProgress,
-  IconButton,
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemSecondaryAction,
-  ListItemText,
-} from '@material-ui/core';
+import { Button, CircularProgress } from '@material-ui/core';
 import { useRouter } from 'next/router';
+import Link from 'next/link';
 import Layout from '../../components/Layout/Layout';
 import { functions } from '../../config';
 import TaskModal from '../../components/Tasks/TaskModal';
@@ -69,15 +60,26 @@ const Tasks = () => {
   };
 
   const successSubmit = async () => {
+    setIsCreating(false);
     const result = await fetchTask();
     setTask(result);
-    toggleOpen(false);
-    setIsCreating(false);
     setIsFetching(false);
   };
 
   const handleOpen = () => {
     toggleOpen(true);
+  };
+
+  const handleClose = () => {
+    toggleOpen(false);
+  };
+
+  const deleteTask = async () => {
+    setIsFetching(true);
+    const deleteFunc = functions.httpsCallable('deleteTask');
+    await deleteFunc(id);
+    setIsFetching(false);
+    router.push('/tasks');
   };
 
   React.useEffect(() => {
@@ -105,34 +107,45 @@ const Tasks = () => {
   }, []);
 
   return (
-    <Layout>
+    <Layout title={task ? task.name : 'Undefined'}>
       <Container>
-        <TopContainer>
-          <PageTitle>{task?.name}</PageTitle>
-          <Button variant="outlined" color="primary" onClick={handleOpen}>
-            編集
-          </Button>
-          <TaskModal
-            changeSubmiting={changeSubmiting}
-            successSubmit={successSubmit}
-            isOpen={isOpen}
-            type={'edit'}
-            task={task}
-          />
-        </TopContainer>
         {isCreating || isFetching ? (
           <ProgressContainer>
             <CircularProgress />
           </ProgressContainer>
         ) : (
-          <TasksContainer>
-            name: {task?.name}
-            <br />
-            disc: {task?.discription}
-            <br />
-            isCompleted: {String(task?.isCompleted)}
-          </TasksContainer>
+          <React.Fragment>
+            <TopContainer>
+              <PageTitle>{task?.name}</PageTitle>
+              <Button variant="outlined" color="primary" onClick={handleOpen}>
+                編集
+              </Button>
+              <TaskModal
+                changeSubmiting={changeSubmiting}
+                successSubmit={successSubmit}
+                closeModal={handleClose}
+                isOpen={isOpen}
+                type={'edit'}
+                task={task}
+              />
+            </TopContainer>
+            <TasksContainer>
+              name: {task?.name}
+              <br />
+              disc: {task?.discription}
+              <br />
+              isCompleted: {String(task?.isCompleted)}
+            </TasksContainer>
+            <Button variant="outlined" color="primary" onClick={deleteTask}>
+              削除
+            </Button>
+          </React.Fragment>
         )}
+        <Link href="/tasks">
+          <Button variant="outlined" color="primary">
+            Back to Tasks
+          </Button>
+        </Link>
       </Container>
     </Layout>
   );

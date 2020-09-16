@@ -16,6 +16,7 @@ interface IValues {
 interface IProps {
   handleClose: () => void;
   changeSubmiting: () => void;
+  handleSubmit: () => void;
 }
 
 const Form = styled.form({
@@ -32,7 +33,11 @@ const ButtonContainer = styled.div({
   padding: '8px 0',
 });
 
-const TaskForm: React.FC<IProps> = ({ handleClose, changeSubmiting }) => {
+const TaskForm: React.FC<IProps> = ({
+  handleClose,
+  handleSubmit,
+  changeSubmiting,
+}) => {
   const validation = () => {
     Yup.object().shape({
       name: Yup.string().required('必須項目です'),
@@ -41,10 +46,11 @@ const TaskForm: React.FC<IProps> = ({ handleClose, changeSubmiting }) => {
   };
 
   const onSubmit = async (values: IValues) => {
+    handleClose();
     changeSubmiting();
     const insertTask = functions.httpsCallable('insertTask');
     await insertTask(values);
-    handleClose();
+    handleSubmit();
   };
 
   return (
