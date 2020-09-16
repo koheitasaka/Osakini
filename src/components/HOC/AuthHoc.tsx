@@ -5,7 +5,7 @@ import styled from '@emotion/styled';
 import { jsx } from '@emotion/core';
 import { CircularProgress } from '@material-ui/core';
 import { auth, functions } from '../../config/';
-import Layout from '../Layout';
+import Layout from '../Layout/Layout';
 
 type Props = {
   children?: React.ReactNode;
@@ -37,7 +37,6 @@ const AuthHoc = ({ children }: Props) => {
   const checkAuth = async () => {
     setIsFetching(true);
     const redirectResult = await auth.getRedirectResult();
-    console.log(redirectResult);
     if (redirectResult.user) {
       if (redirectResult.additionalUserInfo?.isNewUser) {
         const createUser = functions.httpsCallable('insertUser');
@@ -66,13 +65,13 @@ const AuthHoc = ({ children }: Props) => {
   }, []);
 
   return isFetching ? (
-    <Layout>
+    <Layout title="Sign In">
       <ProgressContainer>
         <CircularProgress />
       </ProgressContainer>
     </Layout>
   ) : !isSignedIn ? (
-    <Layout>
+    <Layout title="Sign In">
       <ImageContainer>
         <SignInBtn
           src="/google_sign_in.png"

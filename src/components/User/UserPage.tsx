@@ -3,8 +3,8 @@ import React from 'react';
 import { jsx } from '@emotion/core';
 import styled from '@emotion/styled';
 import { CircularProgress } from '@material-ui/core';
-import { IUser } from '../../functions/src/types';
-import UserEditModal from './User/UserEditModal';
+import { IUser } from '../../../functions/src/types';
+import UserEditModal from '../User/UserEditModal';
 
 interface IProps {
   userName?: string;

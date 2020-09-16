@@ -2,23 +2,24 @@
 import React from 'react';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-import { Button, FormLabel, TextField } from '@material-ui/core';
+import { Button, Checkbox, FormLabel, TextField } from '@material-ui/core';
 import { jsx } from '@emotion/core';
 import styled from '@emotion/styled';
-import { auth, functions } from '../../config';
-import { IUser } from '../../../functions/src/types';
+import { functions } from '../../config';
+import { ITaskData } from '../../../functions/src/types';
 
 interface IValues {
-  name: string;
-  position: string;
-  team: string;
   id: string;
+  name: string;
+  discription: string;
+  isCompleted: boolean;
 }
 
 interface IProps {
+  values: ITaskData;
   handleClose: () => void;
-  updateUser: () => void;
-  values: IUser;
+  changeSubmiting: () => void;
+  handleSubmit: () => void;
 }
 
 const Form = styled.form({
@@ -35,71 +36,64 @@ const ButtonContainer = styled.div({
   padding: '8px 0',
 });
 
-const UserEditForm: React.FC<IProps> = ({
-  handleClose,
-  updateUser,
+const TaskEditForm: React.FC<IProps> = ({
   values,
+  handleClose,
+  changeSubmiting,
+  handleSubmit,
 }) => {
   const validation = () => {
     Yup.object().shape({
       name: Yup.string().required('必須項目です'),
-      position: Yup.string().required('必須項目です'),
-      team: Yup.string().required('必須項目です'),
+      discription: Yup.string().required('必須項目です'),
     });
   };
-
-  const setUserValue = () => {
-    updateUser();
-  };
-
   const onSubmit = async (values: IValues) => {
-    const updateUser = functions.httpsCallable('updateUser');
-    await updateUser(values);
-    setUserValue();
+    changeSubmiting();
+    const updateTask = functions.httpsCallable('updateTask');
+    await updateTask(values);
     handleClose();
+    handleSubmit();
   };
 
   return (
     <Formik
-      initialValues={{
-        name: values.name,
-        position: values.position,
-        team: values.team,
-        id: auth.currentUser?.uid as string,
-      }}
+      initialValues={values}
       validationSchema={validation()}
       onSubmit={(values: IValues) => onSubmit(values)}
-      render={({ errors, handleChange, handleSubmit }) => (
+      render={({ errors, handleChange, handleSubmit, values }) => (
         <Form onSubmit={handleSubmit}>
+          <FormContainer>
+            <Checkbox
+              checked={values.isCompleted}
+              onChange={handleChange('isCompleted')}
+              name="isCompleted"
+              color="secondary"
+            />
+            <FormLabel>Complete!</FormLabel>
+            <span>{errors.isCompleted}</span>
+          </FormContainer>
           <FormContainer>
             <FormLabel>Name</FormLabel>
             <TextField
               name="name"
               type="text"
               fullWidth
+              value={values.name}
               onChange={handleChange}
             />
             <span>{errors.name}</span>
           </FormContainer>
           <FormContainer>
-            <FormLabel>Position</FormLabel>
+            <FormLabel>Discription</FormLabel>
             <TextField
-              name="position"
+              name="discription"
               type="text"
               fullWidth
+              value={values.discription}
               onChange={handleChange}
             />
-            <span>{errors.position}</span>
-          </FormContainer>
-          <FormContainer>
-            <FormLabel>Team</FormLabel>
-            <TextField
-              name="team"
-              type="text"
-              fullWidth
-              onChange={handleChange}
-            />
-            <span>{errors.team}</span>
+            <span>{errors.discription}</span>
           </FormContainer>
           <ButtonContainer>
             <Button type="submit" color="primary" variant="outlined">
@@ -112,4 +106,4 @@ const UserEditForm: React.FC<IProps> = ({
   );
 };
 
-export default UserEditForm;
+export default TaskEditForm;

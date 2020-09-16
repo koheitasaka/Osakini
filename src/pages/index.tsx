@@ -1,6 +1,6 @@
 import React from 'react';
-import Layout from '../components/Layout';
-import UserPage from '../components/UserPage';
+import Layout from '../components/Layout/Layout';
+import UserPage from '../components/User/UserPage';
 import { auth, functions } from '../config';
 
 const IndexPage = () => {
@@ -34,16 +34,17 @@ const IndexPage = () => {
         setName(result.name);
         setPositon(result.position);
         setTeam(result.team);
+        console.log(result);
       }
     })();
 
     return () => {
       unmounted = true;
     };
-  });
+  }, []);
 
   return (
-    <Layout>
+    <Layout title="HOME">
       <UserPage
         userName={name}
         position={position}

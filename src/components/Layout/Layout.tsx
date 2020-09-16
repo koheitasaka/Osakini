@@ -4,9 +4,10 @@ import Link from 'next/link';
 import Head from 'next/head';
 import { jsx } from '@emotion/core';
 import styled from '@emotion/styled';
-import { auth, functions } from '../config';
+import { auth } from '../../config';
 
 type Props = {
+  title: string;
   children?: ReactNode;
 };
 
@@ -28,25 +29,19 @@ const SideContainer = styled.div({
 
 const Main = styled.div({
   marginTop: '40px',
+  textAlign: 'center',
   width: '100%',
 });
 
-const Layout = ({ children }: Props) => {
+const Layout = ({ title, children }: Props) => {
   const handleLogout = async () => {
-    try {
-      const fetchUser = functions.httpsCallable('fetchUser');
-      const result = await fetchUser(auth.currentUser?.uid as string);
-      console.log(result);
-    } catch (error) {
-      console.log(error.message);
-    }
     await auth.signOut();
   };
 
   return (
     <React.Fragment>
       <Head>
-        <title>HOME | osakini</title>
+        <title>{title} | osakini</title>
         <meta charSet="utf-8" />
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
@@ -55,6 +50,9 @@ const Layout = ({ children }: Props) => {
           <SideContainer>
             <Link href="/">
               <p>Home</p>
+            </Link>
+            <Link href="/tasks">
+              <p>Tasks</p>
             </Link>
             <p onClick={() => handleLogout()}>Logout</p>
           </SideContainer>

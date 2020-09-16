@@ -10,3 +10,16 @@ export interface IUserInput {
   team: string;
   id: string;
 }
+
+export interface ITask {
+  name: string;
+  discription: string;
+  isCompleted: boolean;
+}
+
+export interface ITaskData {
+  name: string;
+  discription: string;
+  isCompleted: boolean;
+  id: string;
+}
