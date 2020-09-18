@@ -77,6 +77,7 @@ const UserEditForm: React.FC<IProps> = ({
               name="name"
               type="text"
               fullWidth
+              value={values.name}
               onChange={handleChange}
             />
             <span>{errors.name}</span>
@@ -87,6 +88,7 @@ const UserEditForm: React.FC<IProps> = ({
               name="position"
               type="text"
               fullWidth
+              value={values.position}
               onChange={handleChange}
             />
             <span>{errors.position}</span>
@@ -97,6 +99,7 @@ const UserEditForm: React.FC<IProps> = ({
               name="team"
               type="text"
               fullWidth
+              value={values.team}
               onChange={handleChange}
             />
             <span>{errors.team}</span>
