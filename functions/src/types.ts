@@ -23,3 +23,35 @@ export interface ITaskData {
   isCompleted: boolean;
   id: string;
 }
+
+export interface IReport {
+  comment: string;
+  date: string;
+  isSubmited: boolean;
+  time: number;
+  userId: string;
+}
+
+export interface IReportData {
+  comment: string;
+  date: string;
+  id: string;
+  isSubmited: boolean;
+  time: number;
+  userId: string;
+}
+
+export interface IDailyTaskData {
+  userId: string;
+  id: string;
+  discription: string;
+  name: string;
+  time: number;
+}
+
+export interface IDailyTask {
+  id: string;
+  discription: string;
+  name: string;
+  time: number;
+}

@@ -1,6 +1,13 @@
 import * as functions from 'firebase-functions';
 import { app } from './admin';
-import { ITask, ITaskData, IUser, IUserInput } from './types';
+import {
+  IDailyTaskData,
+  IReport,
+  ITask,
+  ITaskData,
+  IUser,
+  IUserInput,
+} from './types';
 
 // utils
 const userExists = (context: functions.https.CallableContext) => {
@@ -98,6 +105,7 @@ export const fetchTasks = functions.https.onCall(
         .firestore()
         .collection('tasks')
         .get();
+
       const tasks = tasksRef.docs.map(doc => ({
         id: doc.id,
         name: doc.data().name,
@@ -160,6 +168,71 @@ export const deleteTask = functions.https.onCall(
         .collection('tasks')
         .doc(id)
         .delete();
+      return 'success';
+    } catch (error) {
+      console.log(error.message);
+      return 'error';
+    }
+  },
+);
+
+// Report
+export const insertReport = functions.https.onCall(
+  async (data: IReport, context: functions.https.CallableContext) => {
+    if (!userExists(context)) throw new Error('no user');
+    try {
+      const reportRef = app
+        .firestore()
+        .collection('reports')
+        .doc();
+      const report = {
+        ...data,
+        date: new Date(data.date),
+      };
+      await reportRef.set(report);
+      return 'success';
+    } catch (error) {
+      console.log(error.message);
+      return 'error';
+    }
+  },
+);
+
+export const fetchReports = functions.https.onCall(
+  async (data: any, context: functions.https.CallableContext) => {
+    if (!userExists(context)) throw new Error('no user');
+    try {
+      const reportsRef = await app
+        .firestore()
+        .collection('reports')
+        .get();
+      const reports = reportsRef.docs.map(doc => ({
+        id: doc.id,
+        comment: doc.data().comment,
+        date: doc.data().date,
+        isSubmited: doc.data().isSubmited,
+        time: doc.data().time,
+        userId: doc.data().userId,
+      }));
+      return reports;
+    } catch (error) {
+      console.log(error.message);
+      return 'error';
+    }
+  },
+);
+
+// DailyTask
+export const insertDailyTask = functions.https.onCall(
+  async (data: IDailyTaskData, context: functions.https.CallableContext) => {
+    if (!userExists(context)) throw new Error('no user');
+    try {
+      const collectinoPath = `users/${data.userId}/daily-tasks`;
+      const dailyTaskRef = app
+        .firestore()
+        .collection(collectinoPath)
+        .doc();
+      await dailyTaskRef.set(data);
       return 'success';
     } catch (error) {
       console.log(error.message);

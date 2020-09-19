@@ -48,11 +48,15 @@ const Layout = ({ title, children }: Props) => {
       <Container>
         <Side>
           <SideContainer>
+            <h2>Osakini</h2>
             <Link href="/">
               <p>Home</p>
             </Link>
             <Link href="/tasks">
               <p>Tasks</p>
+            </Link>
+            <Link href="/reports">
+              <p>Reports</p>
             </Link>
             <p onClick={() => handleLogout()}>Logout</p>
           </SideContainer>
