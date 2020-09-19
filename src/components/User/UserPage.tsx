@@ -2,7 +2,8 @@
 import React from 'react';
 import { jsx } from '@emotion/core';
 import styled from '@emotion/styled';
-import { CircularProgress } from '@material-ui/core';
+import { Button, CircularProgress } from '@material-ui/core';
+import Link from 'next/link';
 import { IUser } from '../../../functions/src/types';
 import UserEditModal from '../User/UserEditModal';
 
@@ -20,7 +21,18 @@ const ProgressContainer = styled.div({
 });
 
 const UserContainer = styled.div({
-  margin: '200px',
+  margin: '160px',
+});
+
+const ButtonContainer = styled.div({
+  marginTop: '40px',
+  button: {
+    width: '400px',
+    height: '80px',
+    padding: '8px',
+    border: 'solid 0.4px',
+    borderRadius: '4',
+  },
 });
 
 const UserName = styled.h2({
@@ -53,12 +65,19 @@ const UserPage: React.FC<IProps> = ({
           <CircularProgress />
         </ProgressContainer>
       ) : (
-        <UserContainer>
-          <UserName>{userName} 👋</UserName>
+        <React.Fragment>
+          <UserName>{userName}👋</UserName>
           <UserInfo>position: {position}</UserInfo>
           <UserInfo>team: {team}</UserInfo>
           <UserEditModal updateUser={updateUser} values={userValue} />
-        </UserContainer>
+          <ButtonContainer>
+            <Link href={'/reports/new'}>
+              <Button variant="contained" color="primary">
+                出勤する
+              </Button>
+            </Link>
+          </ButtonContainer>
+        </React.Fragment>
       )}
     </UserContainer>
   );

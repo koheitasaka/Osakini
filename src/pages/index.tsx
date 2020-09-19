@@ -1,3 +1,5 @@
+import { Button } from '@material-ui/core';
+import Link from 'next/link';
 import React from 'react';
 import Layout from '../components/Layout/Layout';
 import UserPage from '../components/User/UserPage';
@@ -34,7 +36,6 @@ const IndexPage = () => {
         setName(result.name);
         setPositon(result.position);
         setTeam(result.team);
-        console.log(result);
       }
     })();
 

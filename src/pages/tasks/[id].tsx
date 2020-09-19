@@ -139,13 +139,13 @@ const Tasks = () => {
             <Button variant="outlined" color="primary" onClick={deleteTask}>
               削除
             </Button>
+            <Link href="/tasks">
+              <Button variant="outlined" color="primary">
+                Back to Tasks
+              </Button>
+            </Link>
           </React.Fragment>
         )}
-        <Link href="/tasks">
-          <Button variant="outlined" color="primary">
-            Back to Tasks
-          </Button>
-        </Link>
       </Container>
     </Layout>
   );
